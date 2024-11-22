@@ -1,0 +1,85 @@
+
+import speech_recognition as sr
+import pyttsx3
+import webbrowser
+from datetime import datetime
+
+# Initialize the speech recognition and text-to-speech engines
+recognizer = sr.Recognizer()
+engine = pyttsx3.init()
+
+# List available microphone devices
+def list_microphones():
+    microphones = sr.Microphone.list_microphone_names()
+    for index, microphone in enumerate(microphones):
+        print(f"{index}: {microphone}")
+
+# You can call this function here to print available microphones
+list_microphones()
+
+def speak(text):
+    """Speak the given text."""
+    engine.say(text)
+    engine.runAndWait()
+
+def listen():
+    """Listen for a command from the microphone."""
+    try:
+        virtual_device_index = 1  # Set this to the correct device index after listing microphones
+        with sr.Microphone(device_index=virtual_device_index) as source:
+            print("Listening...")
+            recognizer.adjust_for_ambient_noise(source, duration=1)  # Adjust for background noise
+            audio = recognizer.listen(source)
+            command = recognizer.recognize_google(audio)
+            print(f"Command Recognized: {command}")
+            return command.lower()
+    except sr.UnknownValueError:
+        speak("Sorry, I Didn't Understand That.")
+        print("Sorry, I Didn't Understand That.")
+        return ""
+    except sr.RequestError:
+        speak("Request Error. Please Check Your Internet Connection.")
+        return ""
+
+def respond(command):
+    """Respond to the given command."""
+    if "hello" in command:
+        speak("Hello! How Can I Assist You Today?")
+        print("Hello! How Can I Assist You Today?")
+    elif "time" in command:
+        current_time = datetime.now().strftime("%H:%M")
+        speak("The Current Time Is {current_time}.")
+        print("The Current Time Is ",current_time)
+    elif "date" in command:
+        current_date = datetime.now().strftime("%B %d, %Y")
+        speak("Today's Date Is {current_date}.")
+        print("Today's Date Is ",current_date)
+    elif "search" in command:
+        speak("What Would You Like To Search For?")
+        print("What Would You Like To Search For?")
+        search_query = listen()
+        if search_query:
+            webbrowser.open(f"https://www.google.com/search?q={search_query}")
+            speak("Here Are The Search Results For {search_query}.")
+            print("Here Are The Search Results For ",search_query)
+    elif "stop" in command or "exit" in command:
+        speak("Goodbye!")
+        print("Goodbye!")
+        return False
+    else:
+        speak("I'm Not Sure How To Help With That.")
+        print("I'm Not Sure How To Help With That.")
+    return True
+
+def main():
+    """Main function to run the voice assistant."""
+    speak("Hello! I Am Your Voice Assistant. How Can I Help You?")
+    print("Hello! I Am Your Voice Assistant. How Can I Help You?")
+    while True:
+        command = listen()
+        if command:
+            if not respond(command):  # If user says "exit" or "stop", break the loop
+                break
+
+if _name_ == "_main_":
+    main()

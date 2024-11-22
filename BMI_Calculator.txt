@@ -1,0 +1,32 @@
+while(1):
+	print('\n///////////////////////////////////////////////////////')
+	n=int(input(">>> Press 0 To Exit And 1 To Begin : "))
+	if(n==0):
+		break
+	else:
+		try:
+			print('\n-----------------BMI CALCULATOR---------------------')
+			print("\n Please Enter The Following Details : ")
+			h=float(input(" Your Height (Meters) : "))
+			if(h<0.55 or h>2.72):
+				print("\t Please Enter A Valid Reasonable Value \n")
+				continue
+			w=float(input(" Your Weight (Kilogram) : "))
+			if(w<15 or w>315):
+				print("\t Please Enter A Valid Reasonable Value \n")
+				continue
+			bmi=w/(h*h)
+			print("\n YOUR BMI IS: ",bmi)
+			if(bmi>=25):
+				print(" Your Height Is OVERWEIGHT ")
+			elif(bmi>=40):
+				print(" Your Height Is EXTREMELY OVERWEIGHT ")
+			elif(bmi<=18.5):
+				print(" Your Height Is UNDERWEIGHT ")
+			elif(bmi<16):
+				print(" Your Height Is EXTREMELY UNDERWEIGHT ")
+			else:
+				print(" NORMAL BMI")
+		except:
+			print("\n Please Enter Valid Numerical Values And Try Again \n")
+			continue
